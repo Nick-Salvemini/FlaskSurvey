@@ -6,9 +6,19 @@
 <form action="/answers/{{q_id}}" method="post">
     <p>{{question}}</p>
     {% for choice in choices %}
-    <input class="radio" type="radio" id="{{choice}}" name="response">
+    <input type="radio" id="{{choice}}" name="response" value="{{choice}}">
     <label for="{{choice}}">{{choice}}</label>
     {% endfor %}
     <button>Submit</button>
 </form>
+{% with warnings = get_flashed_messages(with_categories=false) %}
+{% if warnings %}
+<section>
+    {% for msg in warnings %}
+    <p>{{msg}}</p>
+    {% endfor %}
+</section>
+{% endif %}
+{% endwith %}
+
 {% endblock %}

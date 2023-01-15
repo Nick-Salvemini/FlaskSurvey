@@ -18,18 +18,31 @@ for q in satisfaction_survey.questions:
 
 @app.route('/')
 def home():
-    print(responses, questions, choices)
-    return render_template('home.html', title=satisfaction_survey.title, inst=satisfaction_survey.instructions)
+    if len(responses) == len(questions):
+        return render_template('/thanks.html')
+    return render_template('home.html', title=satisfaction_survey.title, inst=satisfaction_survey.instructions, index=len(responses))
 
 @app.route('/questions/<int:q_num>')
 def ask_questions(q_num):
-    return render_template('questions.html', question=questions[q_num], choices=choices[q_num], q_id=q_num)
+
+    re_len = len(responses)
+
+    if re_len == 0 and q_num != 0:
+        flash('Please do not attempt to access questions out of order. Thank you.')
+        return redirect ('/questions/0')
+    elif re_len > 0 and q_num != re_len:
+        flash('Please do not attempt to access questions out of order. Thank you.')
+        return redirect ('/questions/'+ str(re_len))
+    else:
+        return render_template('questions.html', question=questions[q_num], choices=choices[q_num], q_id=q_num)
 
 @app.route('/answers/<int:q_id>', methods=['POST'])
 def add_answers(q_id):
+
     answer = request.form['response']
     responses.append(answer)
     id = q_id + 1
+
     if id < len(questions):
         # return redirect('/questions/<int:id>')
         return redirect('/questions/'+ str(id))
