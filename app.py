@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, flash, jsonify
+from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import Question, Survey, satisfaction_survey
 
@@ -32,7 +32,7 @@ def ask_questions(q_num):
         return redirect ('/questions/0')
     elif re_len > 0 and q_num != re_len:
         flash('Please do not attempt to access questions out of order. Thank you.')
-        return redirect ('/questions/'+ str(re_len))
+        return redirect (f'/questions/<re_len>')
     else:
         return render_template('questions.html', question=questions[q_num], choices=choices[q_num], q_id=q_num)
 
@@ -44,7 +44,6 @@ def add_answers(q_id):
     id = q_id + 1
 
     if id < len(questions):
-        # return redirect('/questions/<int:id>')
-        return redirect('/questions/'+ str(id))
+        return redirect(f'/questions/<int:id>')
     else:
         return render_template('/thanks.html')
