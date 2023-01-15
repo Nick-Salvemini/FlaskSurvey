@@ -29,8 +29,9 @@ def ask_questions(q_num):
 def add_answers(q_id):
     answer = request.form['response']
     responses.append(answer)
-    if q_id < len(questions):
-        id = q_id + 1
-        return redirect('/questions/<int:id>')
+    id = q_id + 1
+    if id < len(questions):
+        # return redirect('/questions/<int:id>')
+        return redirect('/questions/'+ str(id))
     else:
         return render_template('/thanks.html')
