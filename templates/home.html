@@ -5,8 +5,12 @@
 {% block content %}
 <h1>{{title}}</h1>
 <p>{{inst}}</p>
-<form action="/questions/{{index}}">
+<form action="/start-session" method="post">
+    {% if {{ Session['responses']}} = [] %}
     <button>Begin Survey</button>
+    {% else %}
+    <button>Continue Survey</button>
+    {% endif %}
 </form>
 
 
