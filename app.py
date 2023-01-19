@@ -65,31 +65,40 @@ def home():
         return render_template('home.html', title=satisfaction_survey.title, inst=satisfaction_survey.instructions, index=len(session['responses']))
     
     elif len(session['responses']) == len(choices):
-        return redirect('/thanks.html')
+        return render_template('/thanks.html')
 
     return render_template('home.html', title=satisfaction_survey.title, inst=satisfaction_survey.instructions, index=len(session['responses']))
 
 @app.route('/start-session', methods=['POST'])
 def start_session():
     index=len(session['responses'])
-    return redirect('/questions/<index>') 
+    return redirect(f'/questions/{index}') 
     # return redirect(f'/questions/'+str(index)) 
 
-@app.route('/questions/<q_num>')
+@app.route('/questions/<int:q_num>')
 def ask_questions(q_num):
 
     re_len = len(session['responses'])
 
+    print('**********************************')
+    print(re_len)
+    print(q_num)
+    print(re_len == 0)
+    print(q_num != 0)
+
+
     if re_len == 0 and q_num != 0:
+
         flash('Please do not attempt to access questions out of order. Thank you.')
         return redirect ('/questions/0')
     elif re_len > 0 and q_num != re_len:
+
         flash('Please do not attempt to access questions out of order. Thank you.')
-        return redirect ('/questions/<re_len>')
+        return redirect (f'/questions/{re_len}')
     else:
         return render_template('questions.html', question=questions[q_num], choices=choices[q_num], q_id=q_num)
 
-@app.route('/answers/<q_id>', methods=['POST'])
+@app.route('/answers/<int:q_id>', methods=['POST'])
 def add_answers(q_id):
 
     answer = request.form['response']
@@ -101,6 +110,6 @@ def add_answers(q_id):
     id = q_id + 1
 
     if id < len(questions):
-        return redirect('/questions/<id>')
+        return redirect(f'/questions/{id}')
     else:
         return render_template('/thanks.html')
